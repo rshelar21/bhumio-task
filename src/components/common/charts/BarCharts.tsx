@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import {
   BarChart,
@@ -12,9 +12,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import DownloadChartBtn from "./DownloadChartBtn";
-import { rateData } from "../../../data";
-// import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
-import * as htmlToImage from "html-to-image";
+import { getHtmlToImage } from "../../../utils/htmlToImage";
+import { useReactToPrint } from "react-to-print";
+import Loader from "../Loader";
+import CustomError from "../CustomError";
+import { IRateOptions } from "../../../interfaces/RateOptions";
+import { statesList } from "../../../constants";
+interface IBarChartsProps {
+  data: any;
+  isLoading: boolean;
+  isError: boolean;
+  rateOptions: IRateOptions;
+}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -44,87 +53,110 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const BarCharts = () => {
-  const [data, setData] = useState<any>();
+const BarCharts: React.FC<IBarChartsProps> = ({
+  data,
+  isError,
+  isLoading,
+  rateOptions,
+}) => {
   const elementRef = useRef(null);
-  useEffect(() => {
-    if (rateData) {
-      const data = Object.entries(rateData?.data).map(([key, value]) => {
-        return { name: key, value: value };
-      });
-      setData(data);
-    }
-  }, [rateData]);
 
-  const handleHtmlToImage = () => {
+  const reactToPrintContent = useCallback(() => {
+    return elementRef.current;
+  }, [elementRef.current]);
+
+  const handlePrint = useReactToPrint({
+    content: reactToPrintContent,
+    documentTitle: "AwesomeFileName",
+  });
+
+  const handleHtmlToImage = (type: string) => {
     if (!elementRef.current) return;
-
-    htmlToImage
-      .toPng(elementRef.current, { cacheBust: false })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (type === "PRINT") {
+      console.log("print");
+      handlePrint();
+    } else {
+      getHtmlToImage(type, elementRef);
+    }
   };
-  return (
-    <Box width="100%">
-      <Typography variant="h5" fontWeight="600">
-        In Alaska, most lenders in our data are offering rates at or below
-        6.500%.
-      </Typography>
-      <DownloadChartBtn handleHtmlToImage={handleHtmlToImage} />
-      <Box width="100%" height="500px" ref={elementRef}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            width={500}
-            height={300}
-            data={data}
-            margin={{
-              top: 5,
-              right: 0,
-              left: 0,
-              bottom: 5,
-            }}
-            barSize={25}
-          >
-            <CartesianGrid strokeDasharray="3 5" vertical={false} />
-            <XAxis dataKey="name" />
-            <YAxis
-              label={{
-                value: "Number of lenders offering rate",
-                angle: -90,
-                position: "center",
-                offset: 10,
-              }}
-            />
-            <Tooltip
-              content={<CustomTooltip />}
-              cursor={{
-                fill: "transparent",
-              }}
-            />
 
-            <Legend
-              content={
-                <Box>
-                  <Typography variant="body1">
-                    Interest rates for your situation
-                  </Typography>
-                </Box>
-              }
-            />
-            <Bar
-              dataKey="value"
-              fill="#82ca9d"
-              activeBar={<Rectangle fill="gold" stroke="purple" />}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+  return (
+    <Box width="100%" height="100%" position="relative">
+      {isLoading && (
+        <Box
+          width="100%"
+          height="100%"
+          position="absolute"
+          bgcolor="rgba(0,0,0,0.05)"
+        >
+          <Loader />
+        </Box>
+      )}
+      {rateOptions?.down_payment_amount >= rateOptions?.price && (
+        <Box
+          width="100%"
+          height="100%"
+          position="absolute"
+          bgcolor="rgba(0,0,0,0.05)"
+        >
+          <CustomError />
+        </Box>
+      )}
+      <Box>
+        <Typography variant="h5" fontWeight="600">
+          In{" "}
+          {statesList.find((item) => item.value === rateOptions?.state)?.label},
+          most lenders in our data are offering rates at or below 7.000%.
+        </Typography>
+        <DownloadChartBtn handleHtmlToImage={handleHtmlToImage} />
+        <Box width="100%" height="500px" ref={elementRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 0,
+                left: 0,
+                bottom: 5,
+              }}
+              barSize={25}
+            >
+              <CartesianGrid strokeDasharray="3 5" vertical={false} />
+              <XAxis dataKey="name" />
+              <YAxis
+                label={{
+                  value: "Number of lenders offering rate",
+                  angle: -90,
+                  position: "center",
+                  offset: 10,
+                }}
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{
+                  fill: "transparent",
+                }}
+              />
+
+              <Legend
+                content={
+                  <Box>
+                    <Typography variant="body1">
+                      Interest rates for your situation
+                    </Typography>
+                  </Box>
+                }
+              />
+              <Bar
+                dataKey="value"
+                fill="#82ca9d"
+                activeBar={<Rectangle fill="gold" stroke="purple" />}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
       </Box>
     </Box>
   );

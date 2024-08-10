@@ -9,4 +9,5 @@ export interface IRateOptions {
   rate_structure: string;
   loan_type : string;
   loan_term : number;
+  arm_type : string;
 }

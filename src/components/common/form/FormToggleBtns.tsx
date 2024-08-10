@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Stack,
-  IconButton,
-  Tooltip,
   Typography,
   ToggleButton,
   ToggleButtonGroup,
@@ -16,6 +14,7 @@ interface IFormToggleBtns {
   name: string;
   handleInputChange: (name: string, value: string | number) => void;
   options: IOptions[];
+  isDisabled?: boolean;
 }
 
 const FormToggleBtns: React.FC<IFormToggleBtns> = ({
@@ -24,15 +23,20 @@ const FormToggleBtns: React.FC<IFormToggleBtns> = ({
   name,
   handleInputChange,
   options,
+  isDisabled,
 }) => {
   const handleAlignment = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: string | number
+    value: string | number
   ) => {
     if (name === "loan_term") {
-      handleInputChange(name, Number(newAlignment));
+      handleInputChange(name, Number(value));
+    } else if (name === "rate_structure" && value === "arm") {
+      handleInputChange(name, value);
+      handleInputChange("loan_term", 30);
+      handleInputChange("loan_type", "conf");
     } else {
-      handleInputChange(name, newAlignment);
+      handleInputChange(name, value);
     }
   };
   return (
@@ -55,6 +59,8 @@ const FormToggleBtns: React.FC<IFormToggleBtns> = ({
                     value?.toString() === item?.value ? "#94d2bd" : "",
                   color: "#000",
                 }}
+                key={index}
+                disabled={isDisabled}
               >
                 <Typography
                   style={{

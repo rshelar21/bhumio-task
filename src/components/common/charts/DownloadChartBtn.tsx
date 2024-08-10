@@ -3,23 +3,23 @@ import { Menu, MenuItem, Button, Box, IconButton } from "@mui/material";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 
 interface IDownloadChartBtn {
-  handleHtmlToImage: () => void;
+  handleHtmlToImage: (type: string) => void;
 }
 
 const DownloadChartBtn: React.FC<IDownloadChartBtn> = ({
   handleHtmlToImage,
 }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [currentValue, setCurrentValue] = useState<null | HTMLElement>(null);
+  const open = Boolean(currentValue);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    setCurrentValue(event.currentTarget);
   };
 
   const handleClose = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     console.log(e?.currentTarget?.innerText);
-    setAnchorEl(null);
-    handleHtmlToImage();
+    setCurrentValue(null);
+    handleHtmlToImage(e?.currentTarget?.innerText);
   };
   return (
     <Box display="flex" justifyContent="flex-end">
@@ -40,7 +40,7 @@ const DownloadChartBtn: React.FC<IDownloadChartBtn> = ({
       </Button>
       <Menu
         id="basic-menu"
-        anchorEl={anchorEl}
+        anchorEl={currentValue}
         open={open}
         onClose={handleClose}
         MenuListProps={{
@@ -50,9 +50,42 @@ const DownloadChartBtn: React.FC<IDownloadChartBtn> = ({
           },
         }}
       >
-        <MenuItem onClick={handleClose}>PNG</MenuItem>
-        <MenuItem onClick={handleClose}>SVG</MenuItem>
-        <MenuItem onClick={handleClose}>JPEG</MenuItem>
+        <MenuItem
+          onClick={handleClose}
+          style={{
+            fontSize: "14px",
+            fontWeight: 400,
+          }}
+        >
+          PNG
+        </MenuItem>
+        <MenuItem
+          onClick={handleClose}
+          style={{
+            fontSize: "14px",
+            fontWeight: 400,
+          }}
+        >
+          SVG
+        </MenuItem>
+        <MenuItem
+          onClick={handleClose}
+          style={{
+            fontSize: "14px",
+            fontWeight: 400,
+          }}
+        >
+          JPEG
+        </MenuItem>
+        <MenuItem
+          onClick={handleClose}
+          style={{
+            fontSize: "14px",
+            fontWeight: 400,
+          }}
+        >
+          PRINT
+        </MenuItem>
       </Menu>
     </Box>
   );

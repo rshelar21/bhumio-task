@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import FormSelect from "../common/form/FormSelect";
 import {
@@ -6,6 +6,7 @@ import {
   rateTypeList,
   loanTermsList,
   loanTypesList,
+  armTypesList,
 } from "../../constants";
 import FormInputText from "../common/form/FormInputText";
 import PercentOutlinedIcon from "@mui/icons-material/PercentOutlined";
@@ -14,29 +15,15 @@ import FormToggleBtns from "../common/form/FormToggleBtns";
 import FormSlider from "../common/form/FormSlider";
 import { IRateOptions } from "../../interfaces/RateOptions";
 
-const RateOptionSidebar = () => {
-  const [rateOptions, setRateOptions] = useState<IRateOptions>({
-    state: statesList[0].value,
-    price: 200000,
-    down_payment_amount_percent: 10,
-    down_payment_amount: 20000,
-    loan_amount: 180000,
-    minfico: 700,
-    maxfico: 719,
-    rate_structure: "fixed",
-    loan_type: "conf",
-    loan_term: 30,
-  });
+interface IRateOptionSidebar {
+  handleInputChange: (name: string, value: string | number) => void;
+  rateOptions: IRateOptions;
+}
 
-  const handleInputChange = (name: string, value: string | number) => {
-    console.log(name, value);
-    setRateOptions((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  // console.log(rateOptions);
+const RateOptionSidebar: React.FC<IRateOptionSidebar> = ({
+  handleInputChange,
+  rateOptions,
+}) => {
   return (
     <Box height="100%" width="100%" bgcolor="#ffffff">
       <Typography variant="h6">Explore Rate Options</Typography>
@@ -100,11 +87,11 @@ const RateOptionSidebar = () => {
                   }
                 />
               </Box>
-              {}
+
               <Box>
                 {rateOptions?.down_payment_amount >= rateOptions?.price && (
-                  <Typography>
-                    Down payment amount should be less than the house price.
+                  <Typography fontWeight="400" fontSize="14px" color="red">
+                    Your down payment cannot be more than your house price.
                   </Typography>
                 )}
               </Box>
@@ -139,6 +126,7 @@ const RateOptionSidebar = () => {
                 value={rateOptions?.loan_term}
                 name="loan_term"
                 handleInputChange={handleInputChange}
+                isDisabled={rateOptions?.rate_structure === "arm"}
               />
               <FormToggleBtns
                 label="Loan Type"
@@ -146,7 +134,17 @@ const RateOptionSidebar = () => {
                 value={rateOptions?.loan_type}
                 name="loan_type"
                 handleInputChange={handleInputChange}
+                isDisabled={rateOptions?.rate_structure === "arm"}
               />
+              {rateOptions?.rate_structure === "arm" && (
+                <FormToggleBtns
+                  label="ARM Type"
+                  options={armTypesList}
+                  value={rateOptions?.arm_type}
+                  name="arm_type"
+                  handleInputChange={handleInputChange}
+                />
+              )}
             </Stack>
           </Box>
         </Box>

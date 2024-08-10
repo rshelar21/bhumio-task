@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Box, Typography, Stack } from "@mui/material";
+import { TextField, Box, Typography, Stack, Input } from "@mui/material";
 import { IRateOptions } from "../../../interfaces/RateOptions";
 
 interface IFormInputText {
@@ -31,12 +31,10 @@ const FormInputText: React.FC<IFormInputText> = ({
       if (Number(value) <= 100 && Number(value) >= 0) {
         const downPaymentAmount =
           (Number(rateOptions?.price) * Number(value)) / 100;
+        const loanAmount = Number(rateOptions?.price) - downPaymentAmount;
         handleInputChange(name, value);
-        handleInputChange("down_payment_amount", downPaymentAmount);
-        handleInputChange(
-          "loan_amount",
-          Number(rateOptions?.price) - downPaymentAmount
-        );
+        handleInputChange("down_payment_amount", downPaymentAmount?.toString());
+        handleInputChange("loan_amount", loanAmount.toString());
         return;
       }
     }
@@ -45,20 +43,21 @@ const FormInputText: React.FC<IFormInputText> = ({
       const downPaymentAmount =
         (Number(value) * Number(rateOptions?.down_payment_amount_percent)) /
         100;
-      handleInputChange(name, Number(value));
-      handleInputChange("down_payment_amount", downPaymentAmount);
-      handleInputChange("loan_amount", Number(value) - downPaymentAmount);
+      const loanAmount = Number(value) - downPaymentAmount;
+      handleInputChange(name, value);
+      handleInputChange("down_payment_amount", downPaymentAmount?.toString());
+      handleInputChange("loan_amount", loanAmount.toString());
       return;
     }
     if (name === "down_payment_amount") {
       const downPaymentPercent = Number(value) / Number(rateOptions?.price);
-      console.log("down_payment_amount_percent", downPaymentPercent);
-      handleInputChange(name, Number(value));
-      handleInputChange("down_payment_amount_percent", downPaymentPercent);
+      const loanAmount = Number(rateOptions?.price) - Number(value);
+      handleInputChange(name, value);
       handleInputChange(
-        "loan_amount",
-        Number(rateOptions?.price) - Number(value)
+        "down_payment_amount_percent",
+        downPaymentPercent?.toString()
       );
+      handleInputChange("loan_amount", loanAmount?.toString());
       return;
     }
   };
@@ -73,8 +72,6 @@ const FormInputText: React.FC<IFormInputText> = ({
           alignItems="center"
         >
           <TextField
-            id="outlined-basic"
-            variant="outlined"
             inputProps={{
               style: {
                 padding: "12px 10px",
@@ -87,6 +84,7 @@ const FormInputText: React.FC<IFormInputText> = ({
             style={{ width: "100%" }}
             autoComplete="off"
             onChange={handleChange}
+            onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
           />
           {Icon && (
             <Box position="absolute" zIndex="999" right="12px">

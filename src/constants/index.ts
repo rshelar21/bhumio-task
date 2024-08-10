@@ -67,3 +67,10 @@ export const loanTypesList = [
   { label: "FHA", value: "fha" },
   { label: "VA", value: "va" },
 ];
+
+export const armTypesList = [
+  { label: "3/1", value: "3-1" },
+  { label: "5/1", value: "5-1" },
+  { label: "7/1", value: "7-1" },
+  { label: "10/1", value: "10-1" },
+];
