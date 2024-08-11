@@ -16,11 +16,12 @@ import Loader from "../Loader";
 import CustomError from "../CustomError";
 import { IRateOptions } from "../../../interfaces/RateOptions";
 import { statesList } from "../../../constants";
+import dayjs from "dayjs";
 interface IBarChartsProps {
   data: any;
   isLoading: boolean;
-  isError: boolean;
   rateOptions: IRateOptions;
+  timeStamp: string;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -72,9 +73,9 @@ const customizedGroupTick = (props: any) => {
 
 const BarCharts: React.FC<IBarChartsProps> = ({
   data,
-  isError,
   isLoading,
   rateOptions,
+  timeStamp,
 }) => {
   const elementRef = useRef(null);
 
@@ -154,6 +155,12 @@ const BarCharts: React.FC<IBarChartsProps> = ({
             </BarChart>
           </ResponsiveContainer>
         </Box>
+        <Typography display="flex" justifyContent="flex-end" mt="5px" gap="4px">
+          These rates are current as of
+          <Typography fontWeight="600">
+            {dayjs(timeStamp).format("MM/DD/YYYY")}
+          </Typography>
+        </Typography>
       </Box>
     </Box>
   );

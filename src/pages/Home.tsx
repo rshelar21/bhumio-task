@@ -58,8 +58,8 @@ const Home = () => {
           <BarCharts
             data={dataValues}
             isLoading={isLoading}
-            isError={isError}
             rateOptions={rateOptions}
+            timeStamp={data?.timestamp}
           />
           <RateOptionSidebar
             handleInputChange={handleInputChange}
