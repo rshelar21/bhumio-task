@@ -1,8 +1,15 @@
 import React from "react";
-import { Box, Select, MenuItem, SelectChangeEvent, Typography, Stack } from "@mui/material";
+import {
+  Box,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  Typography,
+  Stack,
+} from "@mui/material";
 import { IOptions } from "../../../interfaces/utils";
 
-interface IFormSelect {
+interface IFormSelectProps {
   options: IOptions[];
   label: string;
   value: string;
@@ -10,7 +17,7 @@ interface IFormSelect {
   handleInputChange: (name: string, value: string) => void;
 }
 
-const FormSelect: React.FC<IFormSelect> = ({
+const FormSelect: React.FC<IFormSelectProps> = ({
   options,
   label,
   value,

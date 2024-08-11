@@ -2,7 +2,7 @@ import React from "react";
 import { TextField, Box, Typography, Stack, Input } from "@mui/material";
 import { IRateOptions } from "../../../interfaces/RateOptions";
 
-interface IFormInputText {
+interface IFormInputTextProps {
   label?: string;
   value: number | string;
   name: string;
@@ -13,7 +13,7 @@ interface IFormInputText {
   rateOptions: IRateOptions;
 }
 
-const FormInputText: React.FC<IFormInputText> = ({
+const FormInputText: React.FC<IFormInputTextProps> = ({
   label,
   value,
   name,

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { IRateOptions } from "../../interfaces/RateOptions";
 
 export const getRates = async (rateOptions: IRateOptions) => {

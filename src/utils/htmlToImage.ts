@@ -7,7 +7,7 @@ export const getHtmlToImage = async (type: string, elementRef: any) => {
       .toPng(elementRef.current, { cacheBust: false })
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = "my-image-name.png";
+        link.download = "graph-image.png";
         link.href = dataUrl;
         link.click();
       })
@@ -19,7 +19,7 @@ export const getHtmlToImage = async (type: string, elementRef: any) => {
       .toSvg(elementRef.current, { cacheBust: false })
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = "my-image-name.svg";
+        link.download = "graph-image.svg";
         link.href = dataUrl;
         link.click();
       })
@@ -31,7 +31,7 @@ export const getHtmlToImage = async (type: string, elementRef: any) => {
       .toJpeg(elementRef.current, { cacheBust: false })
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = "my-image-name.jpeg";
+        link.download = "graph-image.jpeg";
         link.href = dataUrl;
         link.click();
       })

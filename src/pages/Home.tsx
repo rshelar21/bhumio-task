@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Box, Stack } from "@mui/material";
 import BarCharts from "../components/common/charts/BarCharts";
 import RateOptionSidebar from "../components/home/RateOptionSidebar";
@@ -45,7 +45,6 @@ const Home = () => {
     refetch();
   };
 
-  console.log("rateOptions", rateOptions);
   return (
     <Box
       width="100%"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import FormSelect from "../common/form/FormSelect";
 import {
@@ -15,19 +15,26 @@ import FormToggleBtns from "../common/form/FormToggleBtns";
 import FormSlider from "../common/form/FormSlider";
 import { IRateOptions } from "../../interfaces/RateOptions";
 
-interface IRateOptionSidebar {
+interface IRateOptionSidebarProps {
   handleInputChange: (name: string, value: string | number) => void;
   rateOptions: IRateOptions;
 }
 
-const RateOptionSidebar: React.FC<IRateOptionSidebar> = ({
+const RateOptionSidebar: React.FC<IRateOptionSidebarProps> = ({
   handleInputChange,
   rateOptions,
 }) => {
   return (
     <Box height="100%" width="100%" bgcolor="#ffffff">
       <Typography variant="h6">Explore Rate Options</Typography>
-      <Stack direction="row" width="100%" gap="40px">
+      <Stack
+        direction={{
+          xs: "column",
+          md: "row",
+        }}
+        width="100%"
+        gap="40px"
+      >
         <Box width="100%">
           <Box
             mt="12px"

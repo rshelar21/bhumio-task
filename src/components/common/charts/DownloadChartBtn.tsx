@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Menu, MenuItem, Button, Box, IconButton } from "@mui/material";
+import { Menu, MenuItem, Button, Box } from "@mui/material";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 
-interface IDownloadChartBtn {
+interface IDownloadChartBtnProps {
   handleHtmlToImage: (type: string) => void;
 }
 
-const DownloadChartBtn: React.FC<IDownloadChartBtn> = ({
+const DownloadChartBtn: React.FC<IDownloadChartBtnProps> = ({
   handleHtmlToImage,
 }) => {
   const [currentValue, setCurrentValue] = useState<null | HTMLElement>(null);
@@ -17,7 +17,6 @@ const DownloadChartBtn: React.FC<IDownloadChartBtn> = ({
   };
 
   const handleClose = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    console.log(e?.currentTarget?.innerText);
     setCurrentValue(null);
     handleHtmlToImage(e?.currentTarget?.innerText);
   };

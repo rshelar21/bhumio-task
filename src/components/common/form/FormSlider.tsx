@@ -2,7 +2,7 @@ import React from "react";
 import { Slider, Box, Stack, Typography } from "@mui/material";
 import { IRateOptions } from "../../../interfaces/RateOptions";
 
-interface IFormSlider {
+interface IFormSliderProps {
   label?: string;
   value: string;
   name: string;
@@ -10,7 +10,7 @@ interface IFormSlider {
   rateOptions: IRateOptions;
 }
 
-function valuetext(value: number) {
+function valueText(value: number) {
   if (value === 840) {
     const label = `${value} - ${value + 10}`;
     return label;
@@ -20,7 +20,7 @@ function valuetext(value: number) {
   }
 }
 
-const FormSlider: React.FC<IFormSlider> = ({
+const FormSlider: React.FC<IFormSliderProps> = ({
   label,
   value,
   name,
@@ -47,7 +47,7 @@ const FormSlider: React.FC<IFormSlider> = ({
             defaultValue={720}
             aria-label="Default"
             valueLabelDisplay="auto"
-            valueLabelFormat={valuetext}
+            valueLabelFormat={valueText}
             min={600}
             max={840}
             step={20}

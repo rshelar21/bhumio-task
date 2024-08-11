@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { IOptions } from "../../../interfaces/utils";
 
-interface IFormToggleBtns {
+interface IFormToggleBtnsProps {
   label?: string;
   value: string | number;
   name: string;
@@ -17,7 +17,7 @@ interface IFormToggleBtns {
   isDisabled?: boolean;
 }
 
-const FormToggleBtns: React.FC<IFormToggleBtns> = ({
+const FormToggleBtns: React.FC<IFormToggleBtnsProps> = ({
   label,
   value,
   name,

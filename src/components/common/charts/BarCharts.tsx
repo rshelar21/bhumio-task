@@ -1,14 +1,12 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import DownloadChartBtn from "./DownloadChartBtn";
@@ -53,6 +51,25 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+const customizedGroupTick = (props: any) => {
+  const { x, y, payload } = props;
+
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <text
+        x={0}
+        y={0}
+        dy={5}
+        textAnchor="end"
+        fill="#666"
+        transform="rotate(-90)"
+      >
+        {payload.value}
+      </text>
+    </g>
+  );
+};
+
 const BarCharts: React.FC<IBarChartsProps> = ({
   data,
   isError,
@@ -67,13 +84,12 @@ const BarCharts: React.FC<IBarChartsProps> = ({
 
   const handlePrint = useReactToPrint({
     content: reactToPrintContent,
-    documentTitle: "AwesomeFileName",
+    documentTitle: "Interest Rates",
   });
 
   const handleHtmlToImage = (type: string) => {
     if (!elementRef.current) return;
     if (type === "PRINT") {
-      console.log("print");
       handlePrint();
     } else {
       getHtmlToImage(type, elementRef);
@@ -82,26 +98,12 @@ const BarCharts: React.FC<IBarChartsProps> = ({
 
   return (
     <Box width="100%" height="100%" position="relative">
-      {isLoading && (
-        <Box
-          width="100%"
-          height="100%"
-          position="absolute"
-          bgcolor="rgba(0,0,0,0.05)"
-        >
-          <Loader />
-        </Box>
-      )}
+      {isLoading ? <Loader /> : !data?.length ? <CustomError /> : null}
+
       {rateOptions?.down_payment_amount >= rateOptions?.price && (
-        <Box
-          width="100%"
-          height="100%"
-          position="absolute"
-          bgcolor="rgba(0,0,0,0.05)"
-        >
-          <CustomError />
-        </Box>
+        <CustomError />
       )}
+
       <Box>
         <Typography variant="h5" fontWeight="600">
           In{" "}
@@ -109,7 +111,7 @@ const BarCharts: React.FC<IBarChartsProps> = ({
           most lenders in our data are offering rates at or below 7.000%.
         </Typography>
         <DownloadChartBtn handleHtmlToImage={handleHtmlToImage} />
-        <Box width="100%" height="500px" ref={elementRef}>
+        <Box width="100%" height="520px" ref={elementRef}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               width={500}
@@ -119,12 +121,21 @@ const BarCharts: React.FC<IBarChartsProps> = ({
                 top: 5,
                 right: 0,
                 left: 0,
-                bottom: 5,
+                bottom: 40,
               }}
               barSize={25}
             >
               <CartesianGrid strokeDasharray="3 5" vertical={false} />
-              <XAxis dataKey="name" />
+              <XAxis
+                dataKey="name"
+                label={{
+                  value: " Interest rates for your situation",
+                  position: "insideBottom",
+                  offset: "-35",
+                }}
+                name="Interest rates for your situation"
+                tick={customizedGroupTick}
+              />
               <YAxis
                 label={{
                   value: "Number of lenders offering rate",
@@ -139,21 +150,7 @@ const BarCharts: React.FC<IBarChartsProps> = ({
                   fill: "transparent",
                 }}
               />
-
-              <Legend
-                content={
-                  <Box>
-                    <Typography variant="body1">
-                      Interest rates for your situation
-                    </Typography>
-                  </Box>
-                }
-              />
-              <Bar
-                dataKey="value"
-                fill="#82ca9d"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
+              <Bar dataKey="value" fill="#82ca9d" />
             </BarChart>
           </ResponsiveContainer>
         </Box>
