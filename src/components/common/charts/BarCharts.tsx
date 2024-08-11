@@ -18,10 +18,14 @@ import { IRateOptions } from "../../../interfaces/RateOptions";
 import { statesList } from "../../../constants";
 import dayjs from "dayjs";
 interface IBarChartsProps {
-  data: any;
   isLoading: boolean;
   rateOptions: IRateOptions;
   timeStamp: string;
+  data: {
+        name: string;
+        value: number;
+      }[]
+    | any;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
